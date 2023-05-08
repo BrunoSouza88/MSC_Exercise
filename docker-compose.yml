@@ -1,0 +1,30 @@
+version: '3' # version of the docker-compose used by Trybe
+
+services:
+  node:
+    container_name: api_slido # this is just to name the container
+    image: node:16 # what image will be used in the docker. In this case version 16 of node
+    working_dir: /app # directory will be created as the source of our application
+    tty: true
+    stdin_open: true # didn't understand really well, but this both makes we can working them in a interative way, without our terminal locked
+    volumes:
+      - .:/app # everychange in my local will be saved in the app inside the container
+    ports:
+      - 3001:3001 #biding ports. port in the container will be binded to a port in my PC
+    environment:
+      - PORT=3001 # environment variable
+      - MYSQL_HOST=database
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=slido_db
+    depends_on:
+      - database # my service node depands on my service database
+    
+  database:
+    container_name: db_slido
+    image: mysql:8.0.32
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    ports:
+      - 3306:3306 # litle change here, because prev port is to container, and this port is for DataBase
